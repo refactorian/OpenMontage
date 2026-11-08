@@ -12,6 +12,7 @@ Environment variables:
     TTS_PROVIDER=sherpa_onnx     Prefer this provider in the TTS selector.
     SHERPA_EN_VOICE=am_santa     Default English voice preset.
     SHERPA_SPEED=1.0             Default speaking speed.
+    SHERPA_GAIN_DB=4.0           Default output gain in dB (clip-guarded).
     SHERPA_MODEL_DIR=...         Optional override for the model directory.
 """
 
@@ -19,6 +20,7 @@ from __future__ import annotations
 
 import os
 import time
+import math
 from pathlib import Path
 from typing import Any
 
@@ -40,6 +42,7 @@ DEFAULT_MODEL_DIR = PROJECT_ROOT / "models" / "sherpa_onnx" / "kokoro-multi-lang
 MODEL_NAME = "kokoro-multi-lang-v1_0"
 DEFAULT_VOICE = "am_santa"
 DEFAULT_SPEED = 1.0
+DEFAULT_GAIN_DB = 4.0
 
 # (speaker_id, description) for every English voice in kokoro-multi-lang-v1_0.
 # Speaker IDs 0-27 are English; 28-53 cover the other languages in the model.
@@ -171,6 +174,16 @@ class SherpaTTS(BaseTool):
                 "maximum": 4.0,
                 "description": "Speaking speed. 1.0 is normal.",
             },
+            "gain_db": {
+                "type": "number",
+                "default": DEFAULT_GAIN_DB,
+                "minimum": -24.0,
+                "maximum": 24.0,
+                "description": (
+                    "Output gain in dB applied after synthesis. A clip guard "
+                    "scales the whole clip down if the boost would clip."
+                ),
+            },
             "model_dir": {
                 "type": "string",
                 "description": "Optional override for the extracted Kokoro model directory.",
@@ -190,6 +203,7 @@ class SherpaTTS(BaseTool):
         "speaker_id",
         "sid",
         "speed",
+        "gain_db",
         "model_dir",
     ]
     side_effects = ["writes audio file to output_path"]
@@ -286,6 +300,21 @@ class SherpaTTS(BaseTool):
             raise ValueError("speed must be greater than zero")
         return speed
 
+    @staticmethod
+    def _resolve_gain_db(inputs: dict[str, Any]) -> float:
+        raw = inputs.get("gain_db")
+        if raw is None:
+            raw = os.environ.get("SHERPA_GAIN_DB", DEFAULT_GAIN_DB)
+        try:
+            gain_db = float(raw)
+        except (TypeError, ValueError) as exc:
+            raise ValueError(f"Invalid gain_db: {raw!r}") from exc
+        if not math.isfinite(gain_db):
+            raise ValueError("gain_db must be a finite number")
+        if not -24.0 <= gain_db <= 24.0:
+            raise ValueError("gain_db must be between -24 and 24")
+        return gain_db
+
     # ---- Engine ------------------------------------------------------------
 
     def _get_engine(self, model_dir: Path) -> Any:
@@ -365,6 +394,7 @@ class SherpaTTS(BaseTool):
 
         voice_name, sid = self._resolve_voice(inputs)
         speed = self._resolve_speed(inputs)
+        gain_db = self._resolve_gain_db(inputs)
 
         output_path = Path(inputs.get("output_path", "tts_output.wav"))
         output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -385,6 +415,19 @@ class SherpaTTS(BaseTool):
                 error="sherpa-onnx returned empty audio for the supplied text",
             )
 
+        requested_gain_db = gain_db
+        applied_gain_db = requested_gain_db
+        if requested_gain_db:
+            samples = samples * np.float32(10.0 ** (requested_gain_db / 20.0))
+
+        peak = float(np.max(np.abs(samples)))
+        if peak > 0.999:
+            # Clip guard: scale the whole clip down instead of hard-clipping.
+            scale = 0.999 / peak
+            samples = samples * np.float32(scale)
+            applied_gain_db += 20.0 * math.log10(scale)
+            peak = 0.999
+
         sf.write(str(output_path), samples, sample_rate, subtype="PCM_16")
         if not output_path.exists() or output_path.stat().st_size == 0:
             return ToolResult(
@@ -401,6 +444,9 @@ class SherpaTTS(BaseTool):
                 "voice": voice_name,
                 "speaker_id": sid,
                 "speed": speed,
+                "gain_db": requested_gain_db,
+                "applied_gain_db": round(applied_gain_db, 2),
+                "peak_dbfs": round(20.0 * math.log10(peak), 2) if peak > 0 else None,
                 "sample_rate": sample_rate,
                 "duration_seconds": round(duration, 3),
                 "text_length": len(text),

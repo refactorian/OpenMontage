@@ -213,8 +213,9 @@ projects/<project-name>/
 │   ├── audio/          # Narration segments + final mix (MP3/WAV)
 │   ├── music/          # Background music track (MP3)
 │   └── subtitles.srt   # Generated subtitles
-└── renders/
-    └── final.mp4       # Final rendered video (the deliverable)
+├── renders/
+│   └── final.mp4       # Final rendered video (the deliverable)
+└── publish.txt         # Auto-generated publishing kit (titles, description, tags, hashtags)
 ```
 
 **Naming convention**: Use kebab-case derived from the video title (e.g., `hidden-math-of-nature`, `how-music-rewires-brain`).

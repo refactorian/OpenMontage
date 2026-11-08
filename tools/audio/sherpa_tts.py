@@ -10,7 +10,7 @@ Model setup:
 
 Environment variables:
     TTS_PROVIDER=sherpa_onnx     Prefer this provider in the TTS selector.
-    SHERPA_EN_VOICE=am_michael   Default English voice preset.
+    SHERPA_EN_VOICE=am_santa     Default English voice preset.
     SHERPA_SPEED=1.0             Default speaking speed.
     SHERPA_MODEL_DIR=...         Optional override for the model directory.
 """
@@ -38,7 +38,7 @@ from tools.base_tool import (
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_MODEL_DIR = PROJECT_ROOT / "models" / "sherpa_onnx" / "kokoro-multi-lang-v1_0"
 MODEL_NAME = "kokoro-multi-lang-v1_0"
-DEFAULT_VOICE = "am_michael"
+DEFAULT_VOICE = "am_santa"
 DEFAULT_SPEED = 1.0
 
 # (speaker_id, description) for every English voice in kokoro-multi-lang-v1_0.
@@ -143,7 +143,7 @@ class SherpaTTS(BaseTool):
                 "type": "string",
                 "default": DEFAULT_VOICE,
                 "description": (
-                    "English voice preset, e.g. am_michael, am_onyx, bm_george, "
+                    "English voice preset, e.g. am_santa, am_michael, am_onyx, "
                     "af_heart. A numeric string is treated as a speaker ID."
                 ),
                 "enum": list(VOICE_PRESETS),

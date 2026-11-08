@@ -7,6 +7,7 @@ the tool file in tools/audio/; no changes to this selector are needed.
 
 from __future__ import annotations
 
+import os
 from typing import Any
 
 from tools.base_tool import (
@@ -304,6 +305,10 @@ class TTSSelector(BaseTool):
 
         candidates = filter_explicit_route(inputs, candidates)
         preferred = inputs.get("preferred_provider", "auto")
+        # TTS_PROVIDER is the installation-wide default (e.g. sherpa_onnx for
+        # offline narration). An explicit per-call preference still wins.
+        if preferred == "auto":
+            preferred = os.environ.get("TTS_PROVIDER", "").strip() or "auto"
         allowed = set(inputs.get("allowed_providers") or [])
         if allowed:
             candidates = [tool for tool in candidates if tool.provider in allowed]

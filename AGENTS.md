@@ -14,12 +14,39 @@ Whenever a video production finishes, the agent must **always automatically crea
 
 ### 1. `publish.txt` — Publishing Kit
 
-This file keeps things simple and ready to post:
-1. **Optimized Titles**: 3-4 title variations (e.g., Punchy/Shorts, High-CTR/Curiosity, Technical/Developer, Facebook/LinkedIn).
-2. **Post Description**: Clean, engaging post copy with the story hook, core breakdown, and call to action (no timestamps needed).
-3. **Platform Tags**: Comma-separated tags ready to copy-paste into YouTube Studio or meta fields.
-4. **Hashtags**: Formatted hashtags (`#Topic #TechNews #Shorts...`) for Shorts, Reels, and TikTok.
-5. **Pinned Comment**: A short question or call-to-action for comments.
+Write a complete, platform-ready publishing kit. Every field must be crafted from the actual video content — no filler, no placeholders, no generic copy.
+
+**Required sections:**
+
+1. **Optimized Titles** — At least **5** variations, each targeting a different platform context or audience intent:
+   - `Punchy / Shorts` — ≤60 chars, hook-first, mobile-scroll attention grab
+   - `High-CTR / Curiosity gap` — open loop that makes clicking feel compelled
+   - `Technical / Developer` — precise, keyword-rich, earns trust from experts
+   - `LinkedIn / Professional` — outcome-focused, professional framing
+   - `SEO / Long-tail` — full-phrase title built around searchable terms
+
+2. **Post Descriptions** — **2 distinct versions**:
+   - `Short (Shorts/Reels/TikTok)` — 3–5 punchy sentences, hook → payoff → CTA. Under 150 words.
+   - `Long (YouTube/LinkedIn)` — Full story arc: opening hook, context, what the viewer learns, 3–5 bullet key insights, closing CTA. 200–400 words. No timestamps.
+
+3. **Platform Tags** — 20–30 comma-separated tags for YouTube Studio / meta fields. Mix broad discovery tags with niche long-tail and brand tags.
+
+4. **Hashtags** — 15–25 hashtags in `#Format`. Group in 3 tiers:
+   - Broad reach (3–5): `#AI #Tech #Science`
+   - Mid-niche (6–10): topic-specific, algorithm-friendly
+   - Brand / series (3–5): `#Refactorian #Shorts #Reels`
+
+5. **Pinned Comment** — One carefully crafted engagement-seed comment. Options: a provocative question that splits opinion, a teaser for the next video in the series, a "timestamp guide" if the video is long, or a bold claim that invites debate. Must feel like the creator wrote it, not an AI.
+
+6. **Chapters** *(if video is 3 min+)* — Timestamped chapter list in `00:00 Chapter Name` format, derived from the scene_plan. Skip for Shorts/Reels under 60 seconds.
+
+7. **A/B Hook Lines** — 3 alternative first-sentence hooks for the description, so the creator can test which performs best.
+
+**Quality rules:**
+- Pull every title, stat, and claim directly from the `script` and `brief` artifacts — never invent facts
+- Match the video's tone: dry/technical, hype/cinematic, educational/calm — no one-size-fits-all voice
+- Titles must be unique; no two should feel like variations of the same phrase
+- The pinned comment must spark a reply, not just acknowledge the video
 
 ### 2. `thumbnail.png` — Video Thumbnail
 

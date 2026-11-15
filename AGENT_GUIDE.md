@@ -726,15 +726,111 @@ After `compose` completes and `renders/final.mp4` exists, the agent MUST automat
 
 ### `renders/publish.txt` — Publishing Kit
 
-Write a plain-text publishing kit to `projects/<project-id>/renders/publish.txt` containing:
+Write a **complete, platform-ready publishing kit** to `projects/<project-id>/renders/publish.txt`.
 
-1. **Optimized Titles** — 3-4 variations (Punchy/Shorts, High-CTR/Curiosity, Technical/Developer, Facebook/LinkedIn).
-2. **Post Description** — Engaging copy with story hook, core breakdown, and CTA. No timestamps.
-3. **Platform Tags** — Comma-separated, ready to paste into YouTube Studio or social meta fields.
-4. **Hashtags** — `#Format` hashtags for Shorts, Reels, and TikTok.
-5. **Pinned Comment** — Short question or CTA to seed engagement.
+Draw every title, stat, and claim directly from the `script` artifact (hook, title, key claims, timestamps) and `brief` artifact (tone, platform, target audience, style). **Never invent facts or use generic filler.** Tone must match the video's style — dry/technical, hype/cinematic, educational/calm — applied consistently across all sections.
 
-Draw content from the `script` artifact (hook, title, key claims) and `brief` artifact (tone, platform, audience). The tone must match the video's style — do not use generic filler.
+The file must be formatted as a clearly sectioned plain-text document using `===` banners and `---` sub-dividers for readability (copy-paste-friendly, no markdown).
+
+---
+
+#### Section 1 — Optimized Titles (minimum 5 variations)
+
+One title per line, each preceded by its label. Each targets a distinct platform context or audience intent — no two should feel like paraphrases of the same phrase:
+
+| Label | Goal | Constraints |
+|---|---|---|
+| `Punchy / Shorts` | Mobile-scroll hook, stops the thumb | ≤ 60 chars |
+| `High-CTR / Curiosity Gap` | Open loop that makes clicking feel compelled | ≤ 70 chars |
+| `Technical / Developer` | Precise, keyword-rich, earns expert trust | any length |
+| `LinkedIn / Professional` | Outcome-framed, authoritative tone | ≤ 100 chars |
+| `SEO / Long-tail` | Full-phrase title built around searchable terms | 60–100 chars |
+
+Add a 6th (`Contrarian / Provocative`) when the content is opinionated or challenges conventional wisdom.
+
+---
+
+#### Section 2 — Post Descriptions (2 versions)
+
+**Short version** *(Shorts / Reels / TikTok)*
+- 3–5 sentences max. Under 150 words.
+- Structure: bold opening hook → 1–2 sentences of context → payoff / key insight → CTA.
+- No timestamps. No bullet lists. Reads like a human wrote it in one breath.
+
+**Long version** *(YouTube / LinkedIn)*
+- 200–400 words.
+- Structure:
+  1. Opening hook (1–2 sentences — same energy as the video's first line)
+  2. Context / problem statement (2–3 sentences)
+  3. What the viewer learns / sees (3–5 bullet key insights, each one sentence)
+  4. Why it matters / broader significance (1–2 sentences)
+  5. Closing CTA (subscribe / follow / comment prompt)
+- No timestamps in the body. Add a `--- Chapters ---` block below the description when video is 3 min+ (see Section 6).
+
+---
+
+#### Section 3 — Platform Tags
+
+20–30 comma-separated tags for YouTube Studio / social meta fields.
+
+Mix strategy:
+- **Broad discovery** (5–8): wide-reach category terms a new viewer might search
+- **Niche / long-tail** (10–15): specific to the topic, algorithm-surfacing
+- **Brand** (3–5): `REFACTORIAN`, series name, recurring show tags
+
+Output as a single comma-separated line, ready to paste into YouTube Studio's tag field.
+
+---
+
+#### Section 4 — Hashtags (3-tier stack)
+
+15–25 hashtags in `#CamelCase` format, ordered by tier:
+
+- **Broad reach** (3–5 tags): e.g., `#AI #Tech #Science` — feeds the widest discovery funnel
+- **Mid-niche** (8–12 tags): topic-specific, algorithm-friendly, used by the target community
+- **Brand / series** (3–5 tags): `#Refactorian #Shorts #Reels` — builds channel identity
+
+Output as a single line of space-separated hashtags (ready to paste into caption or description footer).
+
+---
+
+#### Section 5 — Pinned Comment
+
+One carefully crafted comment written **as the creator**, not as a robot. It must do one of the following:
+- Ask a **polarising or opinion-splitting question** ("Which of these three did you NOT expect?")
+- Tease the **next video** in the series ("Part 2 is going to break your brain — it's about X")
+- Surface a **surprising stat or fact** from the video that wasn't the main hook
+- Provide a **"which one are you?"** identity anchor that drives replies
+- For videos 3 min+: a **"quick guide"** mapping key moments (e.g. "0:00 Intro / 1:14 The twist / 2:30 The math")
+
+Rules: sounds human, ≤3 sentences, ends with a question or strong statement — never a generic "What do you think?" or "Let me know in the comments!"
+
+---
+
+#### Section 6 — Chapters *(conditional: skip for videos under 3 min)*
+
+Timestamped chapter list in `MM:SS Chapter Name` format, derived from the scene_plan scene boundaries.
+- First chapter must be `00:00`
+- Chapter names: short (3–5 words), title-case, tell the viewer exactly what they're walking into
+- Minimum 4 chapters for YouTube to surface the chapter feature
+
+---
+
+#### Section 7 — A/B Hook Lines
+
+3 alternative **opening sentences** for the description — the creator can A/B test which pulls best.
+- Each is exactly 1–2 sentences
+- Each uses a different rhetorical device: (1) bold stat/claim, (2) provocative question, (3) story/scene-setting
+- Label them `Hook A`, `Hook B`, `Hook C`
+
+---
+
+**Publishing kit rules:**
+- Sections are separated by `================` banners with the section name centred inside
+- Sub-sections use `---` dividers with a label flush-left
+- The file must be copy-paste-ready — no markdown syntax, no asterisks, no backticks
+- Every claim must trace to the `script` or `brief` artifact — no invented stats or false hooks
+- Minimum length: ~600 words total across all sections; a thin publish.txt is a defect
 
 ### `renders/thumbnail.png` — Video Thumbnail
 

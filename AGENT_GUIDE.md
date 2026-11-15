@@ -213,9 +213,10 @@ projects/<project-name>/
 │   ├── audio/          # Narration segments + final mix (MP3/WAV)
 │   ├── music/          # Background music track (MP3)
 │   └── subtitles.srt   # Generated subtitles
-├── renders/
-│   └── final.mp4       # Final rendered video (the deliverable)
-└── publish.txt         # Auto-generated publishing kit (titles, description, tags, hashtags)
+└── renders/
+    ├── final.mp4       # Final rendered video (the deliverable)
+    ├── publish.txt     # Auto-generated publishing kit (titles, description, tags, hashtags)
+    └── thumbnail.png   # Auto-generated 1280×720 video thumbnail
 ```
 
 **Naming convention**: Use kebab-case derived from the video title (e.g., `hidden-math-of-nature`, `how-music-rewires-brain`).
@@ -718,6 +719,51 @@ The `.agents/skills/` directory is large. When you're not coming in through a to
 | How does a tool actually work? | the tool's `usage_location` from the registry |
 | How should this pipeline stage behave? | `skills/pipelines/<pipeline>/...` |
 | What is the checkpoint/review policy? | `skills/meta/` |
+
+## Automatic Post-Production Deliverables
+
+After `compose` completes and `renders/final.mp4` exists, the agent MUST automatically generate both deliverables into the `renders/` folder — **without waiting for the user to ask**. These are always the last step of a production run.
+
+### `renders/publish.txt` — Publishing Kit
+
+Write a plain-text publishing kit to `projects/<project-id>/renders/publish.txt` containing:
+
+1. **Optimized Titles** — 3-4 variations (Punchy/Shorts, High-CTR/Curiosity, Technical/Developer, Facebook/LinkedIn).
+2. **Post Description** — Engaging copy with story hook, core breakdown, and CTA. No timestamps.
+3. **Platform Tags** — Comma-separated, ready to paste into YouTube Studio or social meta fields.
+4. **Hashtags** — `#Format` hashtags for Shorts, Reels, and TikTok.
+5. **Pinned Comment** — Short question or CTA to seed engagement.
+
+Draw content from the `script` artifact (hook, title, key claims) and `brief` artifact (tone, platform, audience). The tone must match the video's style — do not use generic filler.
+
+### `renders/thumbnail.png` — Video Thumbnail
+
+Generate a **1280×720 PNG** at `projects/<project-id>/renders/thumbnail.png` using the best available image generation tool (check `registry.get_by_capability("image_generation")`):
+
+**What makes a great thumbnail:**
+- One clear focal point — a dramatic visual, concept illustration, or bold hero graphic
+- 2–5 words of high-contrast text, legible at small sizes (YouTube grid)
+- Palette and energy that match the video's visual style
+- Simple and bold — no clutter, no wall of text
+
+**Workflow:**
+1. Build the prompt from: the script's hook/title + the scene_plan's most visually compelling moment + the video's style/palette.
+2. If a hero image already exists in `assets/images/`, use it as a visual reference (img2img or reference conditioning).
+3. Explicitly request in the prompt: bold text overlay, high contrast, 16:9 thumbnail composition, 1280×720.
+4. Save the result to `projects/<project-id>/renders/thumbnail.png`.
+5. **Fallback (no image generation available):** Extract the most visually impactful still frame from `renders/final.mp4` via FFmpeg:
+   ```bash
+   ffmpeg -ss <best_timestamp> -i projects/<project-id>/renders/final.mp4 \
+     -frames:v 1 -vf scale=1280:720 \
+     projects/<project-id>/renders/thumbnail.png
+   ```
+   Pick the timestamp from the scene_plan's hero scene (the scene with the strongest visual moment). Do NOT pick the first frame.
+
+**Rules:**
+- Both deliverables are mandatory. Never skip them because the compose stage passed.
+- Both go in `renders/` — not at the project root, not in `assets/`.
+- If image generation fails, fall back to FFmpeg extraction — never leave `thumbnail.png` missing.
+- Log both as a final step in the compose checkpoint metadata.
 
 ## What Not To Do
 

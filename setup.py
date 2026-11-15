@@ -16,5 +16,11 @@ setup(
         "certifi>=2026.10.19",
         "google-genai>=1.0.0",
         "openai>=2.44.0",
+        "faster-whisper>=1.0.0",
+        "mediapipe>=0.10.0",
+        "opencv-python-headless>=4.8.0",
+        "kokoro-onnx>=0.4.0",
+        "sherpa-onnx>=1.13.0",
+        "soundfile>=0.12.1",
     ],
 )

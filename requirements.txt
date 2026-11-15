@@ -18,5 +18,15 @@ watchfiles>=0.21
 
 websockets>=14.0       # Eleven v4 Turbo and realtime audio transports
 pythainlp>=5.0         # Thai word segmentation for karaoke captions
+
+# Word-level transcription & alignment (transcriber, video_analyzer)
+faster-whisper>=1.0.0
+
+# Face tracking & speaker reframing (clip-factory, auto_reframe, eye_enhance)
+mediapipe>=0.10.0
+opencv-python-headless>=4.8.0
+
+# Local neural TTS
+kokoro-onnx>=0.4.0
 sherpa-onnx>=1.13.0    # Local Kokoro v1.0 English TTS (sherpa_tts)
 soundfile>=0.12.1      # WAV writing for local TTS providers

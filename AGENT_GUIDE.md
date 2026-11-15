@@ -747,17 +747,27 @@ Generate a **1280×720 PNG** at `projects/<project-id>/renders/thumbnail.png` us
 - Simple and bold — no clutter, no wall of text
 
 **Workflow:**
-1. Build the prompt from: the script's hook/title + the scene_plan's most visually compelling moment + the video's style/palette.
-2. If a hero image already exists in `assets/images/`, use it as a visual reference (img2img or reference conditioning).
-3. Explicitly request in the prompt: bold text overlay, high contrast, 16:9 thumbnail composition, 1280×720.
-4. Save the result to `projects/<project-id>/renders/thumbnail.png`.
-5. **Fallback (no image generation available):** Extract the most visually impactful still frame from `renders/final.mp4` via FFmpeg:
+1. **Preferred — HyperFrames HTML**: Author `projects/<project-id>/renders/thumbnail-hf/index.html` (1280×720, `data-duration="1"`, `data-hold`). Match the video's exact design language: palette, grid, fonts, accent colours. Use pure SVG for diagrams — no external images needed. Register a paused GSAP timeline at `window.__timelines["thumbnail"]`.
+2. Run: `cd projects/<project-id>/renders/thumbnail-hf && npx hyperframes snapshot --at 0 --output snapshot_0.png`
+3. Copy the result: `cp snapshot_0.png/frame-00-at-0s.png ../thumbnail.png`
+4. **Design rules for HyperFrames thumbnails:**
+   - Background: `#F5F5F1` (off-white/light grey) — never plain white
+   - Grid: 48px pattern with `rgba(17,24,39,0.045)` lines at `0.65px` stroke, tiny dot intersections; 192px module rules at `rgba(17,24,39,0.07)` / `0.8px`
+   - Corner registration marks in `#94A3B8` (inset ~36px)
+   - Fonts: Inter (900 weight for headline) + JetBrains Mono (eyebrow / stats)
+   - Bold headline: 3–5 words, 60–72px, letter-spacing tight
+   - Stat chips: 4–6 key numbers that ground the hook in hard data
+   - Panel divider: thin vertical rule with gradient fade-in/out
+   - Soft radial vignette overlay
+   - Brand signature in mono lowercase at bottom-right
+5. **Fallback — image generation tool** (`flux_image`, `imagen`, `gpt_image`): Build the prompt from the script's hook/title + scene_plan's hero visual. Explicitly request: bold text overlay, high contrast, 16:9, thumbnail composition, 1280×720.
+6. **Fallback — FFmpeg still-frame**: Extract the most visually impactful moment from `renders/final.mp4`:
    ```bash
    ffmpeg -ss <best_timestamp> -i projects/<project-id>/renders/final.mp4 \
      -frames:v 1 -vf scale=1280:720 \
      projects/<project-id>/renders/thumbnail.png
    ```
-   Pick the timestamp from the scene_plan's hero scene (the scene with the strongest visual moment). Do NOT pick the first frame.
+   Pick the timestamp from the scene_plan's hero scene. Do NOT use the first frame.
 
 **Rules:**
 - Both deliverables are mandatory. Never skip them because the compose stage passed.

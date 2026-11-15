@@ -722,154 +722,19 @@ The `.agents/skills/` directory is large. When you're not coming in through a to
 
 ## Automatic Post-Production Deliverables
 
-After `compose` completes and `renders/final.mp4` exists, the agent MUST automatically generate both deliverables into the `renders/` folder — **without waiting for the user to ask**. These are always the last step of a production run.
+After `compose` completes and `renders/final.mp4` exists, the agent MUST run all post-production tasks defined in `AGENT_TASKS.md` — automatically, without waiting for the user to ask.
 
-### `renders/publish.txt` — Publishing Kit
+**Read `AGENT_TASKS.md` for the full spec of each task.**
 
-Write a **complete, platform-ready publishing kit** to `projects/<project-id>/renders/publish.txt`.
+Currently defined tasks:
 
-Draw every title, stat, and claim directly from the `script` artifact (hook, title, key claims, timestamps) and `brief` artifact (tone, platform, target audience, style). **Never invent facts or use generic filler.** Tone must match the video's style — dry/technical, hype/cinematic, educational/calm — applied consistently across all sections.
-
-The file must be formatted as a clearly sectioned plain-text document using `===` banners and `---` sub-dividers for readability (copy-paste-friendly, no markdown).
-
----
-
-#### Section 1 — Optimized Titles (minimum 5 variations)
-
-One title per line, each preceded by its label. Each targets a distinct platform context or audience intent — no two should feel like paraphrases of the same phrase:
-
-| Label | Goal | Constraints |
+| Task | Output | Location |
 |---|---|---|
-| `Punchy / Shorts` | Mobile-scroll hook, stops the thumb | ≤ 60 chars |
-| `High-CTR / Curiosity Gap` | Open loop that makes clicking feel compelled | ≤ 70 chars |
-| `Technical / Developer` | Precise, keyword-rich, earns expert trust | any length |
-| `LinkedIn / Professional` | Outcome-framed, authoritative tone | ≤ 100 chars |
-| `SEO / Long-tail` | Full-phrase title built around searchable terms | 60–100 chars |
+| Publishing Kit | `publish.txt` | `projects/<project-id>/renders/publish.txt` |
+| Video Thumbnail | `thumbnail.png` | `projects/<project-id>/renders/thumbnail.png` |
 
-Add a 6th (`Contrarian / Provocative`) when the content is opinionated or challenges conventional wisdom.
+Both are mandatory. A production run is not complete until both files exist in `renders/`.
 
----
-
-#### Section 2 — Post Descriptions (2 versions)
-
-**Short version** *(Shorts / Reels / TikTok)*
-- 3–5 sentences max. Under 150 words.
-- Structure: bold opening hook → 1–2 sentences of context → payoff / key insight → CTA.
-- No timestamps. No bullet lists. Reads like a human wrote it in one breath.
-
-**Long version** *(YouTube / LinkedIn)*
-- 200–400 words.
-- Structure:
-  1. Opening hook (1–2 sentences — same energy as the video's first line)
-  2. Context / problem statement (2–3 sentences)
-  3. What the viewer learns / sees (3–5 bullet key insights, each one sentence)
-  4. Why it matters / broader significance (1–2 sentences)
-  5. Closing CTA (subscribe / follow / comment prompt)
-- No timestamps in the body. Add a `--- Chapters ---` block below the description when video is 3 min+ (see Section 6).
-
----
-
-#### Section 3 — Platform Tags
-
-20–30 comma-separated tags for YouTube Studio / social meta fields.
-
-Mix strategy:
-- **Broad discovery** (5–8): wide-reach category terms a new viewer might search
-- **Niche / long-tail** (10–15): specific to the topic, algorithm-surfacing
-- **Brand** (3–5): `REFACTORIAN`, series name, recurring show tags
-
-Output as a single comma-separated line, ready to paste into YouTube Studio's tag field.
-
----
-
-#### Section 4 — Hashtags (3-tier stack)
-
-15–25 hashtags in `#CamelCase` format, ordered by tier:
-
-- **Broad reach** (3–5 tags): e.g., `#AI #Tech #Science` — feeds the widest discovery funnel
-- **Mid-niche** (8–12 tags): topic-specific, algorithm-friendly, used by the target community
-- **Brand / series** (3–5 tags): `#Refactorian #Shorts #Reels` — builds channel identity
-
-Output as a single line of space-separated hashtags (ready to paste into caption or description footer).
-
----
-
-#### Section 5 — Pinned Comment
-
-One carefully crafted comment written **as the creator**, not as a robot. It must do one of the following:
-- Ask a **polarising or opinion-splitting question** ("Which of these three did you NOT expect?")
-- Tease the **next video** in the series ("Part 2 is going to break your brain — it's about X")
-- Surface a **surprising stat or fact** from the video that wasn't the main hook
-- Provide a **"which one are you?"** identity anchor that drives replies
-- For videos 3 min+: a **"quick guide"** mapping key moments (e.g. "0:00 Intro / 1:14 The twist / 2:30 The math")
-
-Rules: sounds human, ≤3 sentences, ends with a question or strong statement — never a generic "What do you think?" or "Let me know in the comments!"
-
----
-
-#### Section 6 — Chapters *(conditional: skip for videos under 3 min)*
-
-Timestamped chapter list in `MM:SS Chapter Name` format, derived from the scene_plan scene boundaries.
-- First chapter must be `00:00`
-- Chapter names: short (3–5 words), title-case, tell the viewer exactly what they're walking into
-- Minimum 4 chapters for YouTube to surface the chapter feature
-
----
-
-#### Section 7 — A/B Hook Lines
-
-3 alternative **opening sentences** for the description — the creator can A/B test which pulls best.
-- Each is exactly 1–2 sentences
-- Each uses a different rhetorical device: (1) bold stat/claim, (2) provocative question, (3) story/scene-setting
-- Label them `Hook A`, `Hook B`, `Hook C`
-
----
-
-**Publishing kit rules:**
-- Sections are separated by `================` banners with the section name centred inside
-- Sub-sections use `---` dividers with a label flush-left
-- The file must be copy-paste-ready — no markdown syntax, no asterisks, no backticks
-- Every claim must trace to the `script` or `brief` artifact — no invented stats or false hooks
-- Minimum length: ~600 words total across all sections; a thin publish.txt is a defect
-
-### `renders/thumbnail.png` — Video Thumbnail
-
-Generate a **1280×720 PNG** at `projects/<project-id>/renders/thumbnail.png` using the best available image generation tool (check `registry.get_by_capability("image_generation")`):
-
-**What makes a great thumbnail:**
-- One clear focal point — a dramatic visual, concept illustration, or bold hero graphic
-- 2–5 words of high-contrast text, legible at small sizes (YouTube grid)
-- Palette and energy that match the video's visual style
-- Simple and bold — no clutter, no wall of text
-
-**Workflow:**
-1. **Preferred — HyperFrames HTML**: Author `projects/<project-id>/renders/thumbnail-hf/index.html` (1280×720, `data-duration="1"`, `data-hold`). Match the video's exact design language: palette, grid, fonts, accent colours. Use pure SVG for diagrams — no external images needed. Register a paused GSAP timeline at `window.__timelines["thumbnail"]`.
-2. Run: `cd projects/<project-id>/renders/thumbnail-hf && npx hyperframes snapshot --at 0 --output snapshot_0.png`
-3. Copy the result: `cp snapshot_0.png/frame-00-at-0s.png ../thumbnail.png`
-4. **Design rules for HyperFrames thumbnails:**
-   - Background: `#F5F5F1` (off-white/light grey) — never plain white
-   - Grid: 48px pattern with `rgba(17,24,39,0.045)` lines at `0.65px` stroke, tiny dot intersections; 192px module rules at `rgba(17,24,39,0.07)` / `0.8px`
-   - Corner registration marks in `#94A3B8` (inset ~36px)
-   - Fonts: Inter (900 weight for headline) + JetBrains Mono (eyebrow / stats)
-   - Bold headline: 3–5 words, 60–72px, letter-spacing tight
-   - Stat chips: 4–6 key numbers that ground the hook in hard data
-   - Panel divider: thin vertical rule with gradient fade-in/out
-   - Soft radial vignette overlay
-   - Brand signature in mono lowercase at bottom-right
-5. **Fallback — image generation tool** (`flux_image`, `imagen`, `gpt_image`): Build the prompt from the script's hook/title + scene_plan's hero visual. Explicitly request: bold text overlay, high contrast, 16:9, thumbnail composition, 1280×720.
-6. **Fallback — FFmpeg still-frame**: Extract the most visually impactful moment from `renders/final.mp4`:
-   ```bash
-   ffmpeg -ss <best_timestamp> -i projects/<project-id>/renders/final.mp4 \
-     -frames:v 1 -vf scale=1280:720 \
-     projects/<project-id>/renders/thumbnail.png
-   ```
-   Pick the timestamp from the scene_plan's hero scene. Do NOT use the first frame.
-
-**Rules:**
-- Both deliverables are mandatory. Never skip them because the compose stage passed.
-- Both go in `renders/` — not at the project root, not in `assets/`.
-- If image generation fails, fall back to FFmpeg extraction — never leave `thumbnail.png` missing.
-- Log both as a final step in the compose checkpoint metadata.
 
 ## What Not To Do
 

@@ -11,7 +11,7 @@ upstream  https://github.com/calesthio/OpenMontage.git     # the project (read-o
 
 | Branch | Role | Tracking |
 | --- | --- | --- |
-| `main` | Clean mirror of upstream | `upstream/main` |
+| `main` | Clean mirror of upstream | `origin/main` (mirrors `upstream/main`) |
 | `personal` | Your commits, always on top of `upstream/main` | `origin/personal` |
 
 Never commit to `main`. It exists so `git rebase upstream/main` and

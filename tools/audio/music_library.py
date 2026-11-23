@@ -142,10 +142,13 @@ class MusicLibrary(BaseTool):
     def _list_tracks(self, library_dir: Path) -> list[Path]:
         if not library_dir.is_dir():
             return []
+        # music_library/sfx/ holds short sound effects, not music tracks.
         tracks = [
             p
             for p in library_dir.rglob("*")
-            if p.is_file() and p.suffix.lower() in _AUDIO_EXTENSIONS
+            if p.is_file()
+            and p.suffix.lower() in _AUDIO_EXTENSIONS
+            and p.relative_to(library_dir).parts[0] != "sfx"
         ]
         return sorted(tracks, key=lambda p: p.as_posix().lower())
 

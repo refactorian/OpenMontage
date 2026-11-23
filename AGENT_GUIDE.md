@@ -216,7 +216,7 @@ projects/<project-name>/
 └── renders/
     ├── final.mp4       # Final rendered video (the deliverable)
     ├── publish.txt     # Auto-generated publishing kit (titles, description, tags, hashtags)
-    └── thumbnail.png   # Auto-generated 1280×720 video thumbnail
+    └── thumbnail.png   # Auto-generated thumbnail, same orientation as final.mp4
 ```
 
 **Naming convention**: Use kebab-case derived from the video title (e.g., `hidden-math-of-nature`, `how-music-rewires-brain`).

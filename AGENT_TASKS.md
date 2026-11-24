@@ -172,7 +172,7 @@ Every format shares the house style in Step 3. They differ in layout and safe zo
 
 - **Layout:** a split. The focal visual goes on the left (~55% of the width) and the text column on the right. A thin vertical rule fades in and out between them. Mirror the layout if the visual reads better on the right.
 - **Safe box:** x 64–1216, y 48–672. Nothing essential goes outside it.
-- **Keep clear:** the bottom-right 200×90 px. YouTube draws the duration badge there, so never put the brand or a chip in that corner.
+- **Keep clear:** the bottom-right 200×90 px. YouTube draws the duration badge there, so never put a chip or any text in that corner.
 - **Headline:** 72–96px, at most 3 lines.
 
 #### Vertical — 1080×1920 (Shorts / Reels / TikTok)
@@ -183,7 +183,7 @@ Every format shares the house style in Step 3. They differ in layout and safe zo
   - Feeds that show vertical video as 4:5 crop to y 285–1635.
   - The Shorts shelf draws the title and view count over the bottom ~20%.
   - The safe box keeps the essentials inside all three.
-- **Keep clear:** y < 285 and y > 1500. Use them only for background, grid and the brand mark.
+- **Keep clear:** y < 285 and y > 1500. Use them only for background, grid and corner marks.
 - **Headline:** 120–160px, at most 3 lines, at most 12 characters per line. Count the characters per line before building.
 - **Minimum text size:** 34px.
 
@@ -209,7 +209,7 @@ Every format shares the house style in Step 3. They differ in layout and safe zo
 | Accent word | At most one accent word or idea per headline. Its text colour must pass **≥ 3:1** against the background. (WCAG contrast ratio). If the brand accent fails (e.g. orange `#FF6A13` on `#F5F5F1` is 2.62:1), keep the word in ink and put the accent on a solid highlight bar, an underline (≥ 8px) or a shape behind it. |
 | Eyebrow | JetBrains Mono · **22–26px** on horizontal, **34–40px** on vertical / square · 0.2em letter-spacing · uppercase · colour ≥ 4.5:1 contrast |
 | Stat chips | Horizontal: 3–4 chips. Vertical / square: 2–3 chips. Values in `font-mono` 26px+ (horizontal) or 36px+ (vertical); labels in `font-sans`. 1.5px border with a semi-transparent fill. The chips are optional and come out before the headline shrinks. |
-| Brand | `REFACTORIAN` in JetBrains Mono, `#64748B`, 18–22px (horizontal) or 26–30px (vertical). Horizontal: bottom-left, inside the safe box. Vertical / square: bottom-centre, around 100px above the bottom edge. |
+| No signature | Thumbnails carry **no** author or channel signature (no `REFACTORIAN` brand mark). The platform already shows the channel name next to the tile. The in-video signature rule does not apply to thumbnails. |
 | Focal visual | A topic-appropriate SVG built from primitives, e.g. sensor rings, data flows or circuit diagrams. It is the largest element in the frame. Its strokes are ≥ 2px (horizontal) or ≥ 3px (vertical), so they survive downscaling. |
 
 **Production-grade rules:**
@@ -220,7 +220,7 @@ Every format shares the house style in Step 3. They differ in layout and safe zo
 4. **Legible small.** Check the headline in the small previews (Step 5) at the smallest size: 168×94 for horizontal, 120×213 for vertical. If it can't be read there, make it shorter or bigger.
 5. **Contrast.** All text is ≥ 4.5:1, except accent words and headline-sized text, which need ≥ 3:1.
 6. **Sharp.** Capture at 2× density and downscale with Lanczos (Method 1). Never upscale a smaller image to the canvas.
-7. **Clean.** No placeholder text, no lorem ipsum, no tool or AI mentions, no watermark other than the brand mark, and no text clipped at an edge or a crop line.
+7. **Clean.** No placeholder text, no lorem ipsum, no tool or AI mentions, no author signature, brand mark or watermark, and no text clipped at an edge or a crop line.
 
 ---
 
@@ -273,7 +273,7 @@ Request the aspect ratio of the detected format explicitly. Use the tool's aspec
 | vertical | "9:16 vertical thumbnail, subject centred in the middle 60% of the frame, empty space at the top for text, nothing important near the top or bottom edges" | 1080×1920 or larger 9:16 |
 | square / 4:5 | "1:1" or "4:5" with the subject centred | 1080×1080 / 1080×1350 |
 
-Generate the image **without text**, because generated lettering is often misspelled. Then add the headline, eyebrow and brand as an overlay that follows Steps 2–3. Use a minimal HTML page rendered with any headless browser, or ffmpeg `drawtext` with an Inter / JetBrains Mono font file. If the image comes back at another size, scale and centre-crop it to the canvas (see Method 3). Never stretch it.
+Generate the image **without text**, because generated lettering is often misspelled. Then add the headline and eyebrow (no signature) as an overlay that follows Steps 2–3. Use a minimal HTML page rendered with any headless browser, or ffmpeg `drawtext` with an Inter / JetBrains Mono font file. If the image comes back at another size, scale and centre-crop it to the canvas (see Method 3). Never stretch it.
 
 ---
 
@@ -318,7 +318,7 @@ ffmpeg -y -v error -i thumbnail.png -vf crop=1080:1440:0:240 <tmp>/crop_3x4.png
 ffmpeg -y -v error -i thumbnail.png -vf crop=1080:1350:0:285 <tmp>/crop_4x5.png
 ```
 
-Confirm that the headline reads at the small size, that no crop cuts anything essential, and that nothing important sits in a keep-clear zone (Step 2).
+Confirm that the headline reads at the small size, that no crop cuts anything essential, that nothing important sits in a keep-clear zone (Step 2), and that no author signature or brand mark appears anywhere.
 
 If the PNG is over 2 MB (busy generated art), keep it as the master. Also write `thumbnail.jpg` with `ffmpeg -i thumbnail.png -q:v 2 thumbnail.jpg`, check that it is under 2 MB, and name it as the upload file in `publish.txt`.
 
